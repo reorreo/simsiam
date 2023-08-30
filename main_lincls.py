@@ -95,8 +95,8 @@ def main():
     args = parser.parse_args()
     # opne
     test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','w') 
-    test_log.write('testt')
-    test_log.close()
+    # test_log.write('testt')
+    # test_log.close()
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -128,6 +128,9 @@ def main():
     else:
         # Simply call main_worker function
         main_worker(args.gpu, ngpus_per_node, args, test_log)
+
+    #close
+    test_log.close()
 
 
 def main_worker(gpu, ngpus_per_node, args, test_log=None):
