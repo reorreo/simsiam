@@ -133,7 +133,7 @@ def main():
     test_log.close()
 
 
-def main_worker(gpu, ngpus_per_node, args, test_log=None):
+def main_worker(gpu, ngpus_per_node, args, test_log):
     global best_acc1
     args.gpu = gpu
 
@@ -299,7 +299,7 @@ def main_worker(gpu, ngpus_per_node, args, test_log=None):
         num_workers=args.workers, pin_memory=True)
 
     if args.evaluate:
-        validate(val_loader, model, criterion, args)
+        validate(val_loader, model, criterion, args, epoch, test_log)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
@@ -382,7 +382,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             progress.display(i)
 
 
-def validate(val_loader, model, criterion, args, epoch=None, test_log=None):
+def validate(val_loader, model, criterion, args, epoch, test_log):
     batch_time = AverageMeter('Time', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
     top1 = AverageMeter('Acc@1', ':6.2f')
