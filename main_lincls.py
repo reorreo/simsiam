@@ -96,6 +96,7 @@ def main():
     # opne
     test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','w') 
     test_log.write('testt')
+    test_log.close()
 
     if args.seed is not None:
         random.seed(args.seed)
