@@ -423,7 +423,7 @@ def validate(val_loader, model, criterion, args, epoch):
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:7.3f}'
               .format(top1=top1, top5=top5))
         test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','a') 
-        test_log.write(' {:4f}  {top1.avg:.3f}  {top5.avg:7.3f}¥n'
+        test_log.write(' {:4f}  {top1.avg:.3f}  {top5.avg:7.3f}\n'
               .format(epoch, top1=top1, top5=top5))
         test_log.close()
 
