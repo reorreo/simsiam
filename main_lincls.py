@@ -93,6 +93,8 @@ best_acc1 = 0
 
 def main():
     args = parser.parse_args()
+    # opne
+    test_log=open('./checkpoint/%d'%(args.epochs)+'_acc.txt','w') 
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -123,10 +125,10 @@ def main():
         mp.spawn(main_worker, nprocs=ngpus_per_node, args=(ngpus_per_node, args))
     else:
         # Simply call main_worker function
-        main_worker(args.gpu, ngpus_per_node, args)
+        main_worker(args.gpu, ngpus_per_node, args, test_log)
 
 
-def main_worker(gpu, ngpus_per_node, args):
+def main_worker(gpu, ngpus_per_node, args, test_log=None):
     global best_acc1
     args.gpu = gpu
 
@@ -304,7 +306,7 @@ def main_worker(gpu, ngpus_per_node, args):
         train(train_loader, model, criterion, optimizer, epoch, args)
 
         # evaluate on validation set
-        acc1 = validate(val_loader, model, criterion, args)
+        acc1 = validate(val_loader, model, criterion, args, epoch, test_log)
 
         # remember best acc@1 and save checkpoint
         is_best = acc1 > best_acc1
@@ -375,7 +377,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             progress.display(i)
 
 
-def validate(val_loader, model, criterion, args):
+def validate(val_loader, model, criterion, args, epoch=None, test_log=None):
     batch_time = AverageMeter('Time', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
     top1 = AverageMeter('Acc@1', ':6.2f')
@@ -413,8 +415,11 @@ def validate(val_loader, model, criterion, args):
                 progress.display(i)
 
         # TODO: this should also be done with the ProgressMeter
-        print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:.3f}'
+        print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:7.3f}'
               .format(top1=top1, top5=top5))
+        test_log.write(' {:4f}  {top1.avg:.3f}  {top5.avg:7.3f}'
+              .format(epoch, top1=top1, top5=top5))
+        test_log.flush()  
 
     return top1.avg
 
