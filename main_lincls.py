@@ -95,6 +95,7 @@ def main():
     args = parser.parse_args()
     # opne
     test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','w') 
+    test_log.write('testt')
 
     if args.seed is not None:
         random.seed(args.seed)
@@ -417,6 +418,7 @@ def validate(val_loader, model, criterion, args, epoch=None, test_log=None):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:7.3f}'
               .format(top1=top1, top5=top5))
+        
         test_log.write(' {:4f}  {top1.avg:.3f}  {top5.avg:7.3f}'
               .format(epoch, top1=top1, top5=top5))
         test_log.flush()  
