@@ -94,7 +94,7 @@ best_acc1 = 0
 def main():
     args = parser.parse_args()
     # opne
-    test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','w') 
+    # test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','w') 
     # test_log.write('testt')
     # test_log.close()
 
