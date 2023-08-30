@@ -127,13 +127,13 @@ def main():
         mp.spawn(main_worker, nprocs=ngpus_per_node, args=(ngpus_per_node, args))
     else:
         # Simply call main_worker function
-        main_worker(args.gpu, ngpus_per_node, args, test_log)
+        main_worker(args.gpu, ngpus_per_node, args)
 
     #close
     test_log.close()
 
 
-def main_worker(gpu, ngpus_per_node, args, test_log):
+def main_worker(gpu, ngpus_per_node, args):
     global best_acc1
     args.gpu = gpu
 
@@ -299,7 +299,7 @@ def main_worker(gpu, ngpus_per_node, args, test_log):
         num_workers=args.workers, pin_memory=True)
 
     if args.evaluate:
-        validate(val_loader, model, criterion, args, epoch, test_log)
+        validate(val_loader, model, criterion, args, epoch)
         return
 
     for epoch in range(args.start_epoch, args.epochs):
@@ -311,7 +311,7 @@ def main_worker(gpu, ngpus_per_node, args, test_log):
         train(train_loader, model, criterion, optimizer, epoch, args)
 
         # evaluate on validation set
-        acc1 = validate(val_loader, model, criterion, args, epoch, test_log)
+        acc1 = validate(val_loader, model, criterion, args, epoch)
 
         # remember best acc@1 and save checkpoint
         is_best = acc1 > best_acc1
@@ -382,7 +382,7 @@ def train(train_loader, model, criterion, optimizer, epoch, args):
             progress.display(i)
 
 
-def validate(val_loader, model, criterion, args, epoch, test_log):
+def validate(val_loader, model, criterion, args, epoch):
     batch_time = AverageMeter('Time', ':6.3f')
     losses = AverageMeter('Loss', ':.4e')
     top1 = AverageMeter('Acc@1', ':6.2f')
@@ -422,10 +422,11 @@ def validate(val_loader, model, criterion, args, epoch, test_log):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:7.3f}'
               .format(top1=top1, top5=top5))
-        
+        test_log=open('./acc/%d'%(args.epochs)+'_acc.txt','w') 
         test_log.write(' {:4f}  {top1.avg:.3f}  {top5.avg:7.3f}'
               .format(epoch, top1=top1, top5=top5))
         test_log.flush()  
+        test_log.close()
 
     return top1.avg
 
