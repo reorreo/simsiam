@@ -424,14 +424,12 @@ def validate(val_loader, model, criterion, args, epoch):
         # TODO: this should also be done with the ProgressMeter
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:7.3f}'
               .format(top1=top1, top5=top5))
-        print('test1')
-        i = i+1
-        print(i)
-        with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
+        
+
+    with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
             f.write(' {:4d},{top1.avg:.3f},{top5.avg:7.3f}\n'
               .format(epoch, top1=top1, top5=top5))
         
-
     return top1.avg
 
 
