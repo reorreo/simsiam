@@ -427,12 +427,10 @@ def validate(val_loader, model, criterion, args, epoch):
         print('test1')
         i = i+1
         print(i)
-        test_log=open('./acc/%d'%(args.epochs)+'_acc.csv','a') 
-        test_log.write(' {:4d},{top1.avg:.3f},{top5.avg:7.3f}\n'
+        with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
+            f.write(' {:4d},{top1.avg:.3f},{top5.avg:7.3f}\n'
               .format(epoch, top1=top1, top5=top5))
-        test_log.write(' {:4d}\n'
-              .format(i))
-        test_log.close()
+        
 
     return top1.avg
 
