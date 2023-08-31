@@ -315,9 +315,7 @@ def main_worker(gpu, ngpus_per_node, args):
         # evaluate on validation set
         acc1, acc5 = validate(val_loader, model, criterion, args, epoch)
 
-        with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
-                f.write(' {:4d},{acc1:.3f},{acc5:7.3f}\n'
-                    .format(epoch, acc1=acc1, acc5=acc5))
+        
 
         # remember best acc@1 and save checkpoint
         is_best = acc1 > best_acc1
@@ -325,6 +323,9 @@ def main_worker(gpu, ngpus_per_node, args):
 
         if not args.multiprocessing_distributed or (args.multiprocessing_distributed
                 and args.rank % ngpus_per_node == 0):
+            with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
+                f.write(' {:4d},{acc1:.3f},{acc5:7.3f}\n'
+                    .format(epoch, acc1=acc1, acc5=acc5))
             save_checkpoint({
                 'epoch': epoch + 1,
                 'arch': args.arch,
