@@ -313,7 +313,11 @@ def main_worker(gpu, ngpus_per_node, args):
         train(train_loader, model, criterion, optimizer, epoch, args)
 
         # evaluate on validation set
-        acc1 = validate(val_loader, model, criterion, args, epoch)
+        acc1, acc5 = validate(val_loader, model, criterion, args, epoch)
+
+        with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
+                f.write(' {:4d},{acc1:.3f},{acc5:7.3f}\n'
+                    .format(epoch, acc1=acc1, acc5=acc5))
 
         # remember best acc@1 and save checkpoint
         is_best = acc1 > best_acc1
@@ -426,11 +430,11 @@ def validate(val_loader, model, criterion, args, epoch):
               .format(top1=top1, top5=top5))
         
 
-    with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
-            f.write(' {:4d},{top1.avg:.3f},{top5.avg:7.3f}\n'
-              .format(epoch, top1=top1, top5=top5))
+    # with open('./acc/%d'%(args.epochs)+'_acc.csv','a') as f:
+    #         f.write(' {:4d},{top1.avg:.3f},{top5.avg:7.3f}\n'
+    #           .format(epoch, top1=top1, top5=top5))
         
-    return top1.avg
+    return top1.avg, top5.avg
 
 
 def save_checkpoint(state, is_best, filename='checkpoint.pth.tar'):
