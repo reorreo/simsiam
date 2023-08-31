@@ -27,6 +27,8 @@ import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torchvision.models as models
 
+i = 0
+
 model_names = sorted(name for name in models.__dict__
     if name.islower() and not name.startswith("__")
     and callable(models.__dict__[name]))
@@ -423,6 +425,8 @@ def validate(val_loader, model, criterion, args, epoch):
         print(' * Acc@1 {top1.avg:.3f} Acc@5 {top5.avg:7.3f}'
               .format(top1=top1, top5=top5))
         print('test1')
+        i = i+1
+        print(i)
         test_log=open('./acc/%d'%(args.epochs)+'_acc.csv','a') 
         test_log.write(' {:4d},{top1.avg:.3f},{top5.avg:7.3f}\n'
               .format(epoch, top1=top1, top5=top5))
